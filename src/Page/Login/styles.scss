@@ -8,12 +8,20 @@
   justify-content: center;
   align-items: center;
 
+  .imgWave {
+    height: 100%;
+    width: 100;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 0;
+  }
+
   .types-error {
     color: red;
     font-size: 17px;
     font-weight: 600;
   }
-
 
   .content-login {
     width: 700px;
@@ -24,6 +32,7 @@
     display: flex;
     justify-content: center;
     box-shadow: #333 -1px 1px 5px 0px;
+    z-index: 2;
 
     .content-form {
       display: flex;

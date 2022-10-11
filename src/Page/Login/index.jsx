@@ -137,11 +137,11 @@ const Login = ({ title }) => {
     }
   }, [error]);
 
-
   // return de login para entrar na aplicação
   if (title === "Login") {
     return (
       <div className="container-login">
+        <img src="/img/ilus_bg.svg" alt="alt" className="imgWave" />
         <div className="content-login">
           <div className="content-form">
             <h1>{title}</h1>
@@ -185,6 +185,7 @@ const Login = ({ title }) => {
     // return de cadastro para criar uma conta
     return (
       <div className="container-login">
+        <img src="/img/ilus_bg.svg" alt="alt" className="imgWave" />
         <div className="content-login">
           <div className="content-form">
             <h1>{title}</h1>
