@@ -3,7 +3,7 @@ import "./styles.scss";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { api } from "../../Api/connection";
-import Spiner from "../../Components/loading";
+import Spiner from "../../Components/Loading";
 
 const Login = ({ title }) => {
   // State
