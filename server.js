@@ -9,7 +9,8 @@ app.get("/*", (req, res) => {
   res.sendFile(resolve(__dirname, "dist/index.html"));
 });
 
-app.listen(process.env.PORT || 3000, (err) => {
+
+app.listen(process.env.VITE_PORT || 3000, (err) => {
   if (err) {
     return console.log(err);
   }
