@@ -2,21 +2,27 @@ import React, { useState, useEffect } from "react";
 import "./styles.scss";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { firebaseDB } from "../../Api/connection";
+import { api } from "../../Api/connection";
+import Spiner from "../../Components/loading";
 
 const Login = ({ title }) => {
   // State
   const [email, setEmail] = useState("");
+  const [toogle, setToogle] = useState(false);
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState({
     message: "",
     status: false,
     class: "",
   });
+  const [user, setUser] = useState([]);
+
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setToogle(true);
 
     if (email === "") {
       setError({
@@ -34,32 +40,34 @@ const Login = ({ title }) => {
       return;
     }
 
-    firebaseDB
-      .signInWithEmailAndPassword(email, password)
-      .then((data) => {
-        console.log(data.user.refreshToken);
-        const newUser = {
-          email: data.user.email,
-          refreshToken: data.user.refreshToken,
-        };
-        localStorage.setItem("user", JSON.stringify(newUser));
-        const Toast = Swal.mixin({
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.addEventListener("mouseenter", Swal.stopTimer);
-            toast.addEventListener("mouseleave", Swal.resumeTimer);
-          },
-        });
+    api
+      .post("/login", { email, password })
+      .then((response) => {
+        if (response.status === 200) {
+          setUser(response.data.data);
+          setToogle(false);
 
-        Toast.fire({
-          icon: "success",
-          title: "Logado com sucesso",
-        });
-        navigate("/");
+          localStorage.setItem("user", JSON.stringify(response.data.data));
+
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener("mouseenter", Swal.stopTimer);
+              toast.addEventListener("mouseleave", Swal.resumeTimer);
+            },
+          });
+          Toast.fire({
+            icon: "success",
+            title: "Logado com sucesso",
+          });
+
+          window.location.reload();
+          navigate("/home");
+        }
       })
       .catch((error) => {
         Swal.fire({
@@ -75,7 +83,7 @@ const Login = ({ title }) => {
 
   const handleCreate = (e) => {
     e.preventDefault();
-
+    setToogle(true);
     if (email === "") {
       setError({
         message: "Preencha o campo email",
@@ -92,15 +100,20 @@ const Login = ({ title }) => {
       return;
     }
 
-    firebaseDB
-      .createUserWithEmailAndPassword(email, password)
-      .then((user) => {
-        Swal.fire({
-          icon: "success",
-          title: "Conta criada com sucesso",
-          showConfirmButton: false,
-          timer: 1500,
-        });
+    api
+      .post("/create/user", { username, email, password })
+      .then((response) => {
+        console.log(response);
+        if (response.status === 200) {
+          setToogle(false);
+          Swal.fire({
+            icon: "success",
+            title: "Sucesso",
+            text: "Usuário criado com sucesso",
+          });
+
+          navigate("/login");
+        }
       })
       .catch((error) => {
         setError({
@@ -114,28 +127,6 @@ const Login = ({ title }) => {
     setEmail("");
     setPassword("");
   };
-
-  useEffect(() => {
-    if (error.status) {
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.addEventListener("mouseenter", Swal.stopTimer);
-          toast.addEventListener("mouseleave", Swal.resumeTimer);
-        },
-      });
-
-      Toast.fire({
-        icon: error.class === "error" ? "error" : "success",
-
-        title: error.message,
-      });
-    }
-  }, [error]);
 
   // return de login para entrar na aplicação
   if (title === "Login") {
@@ -166,9 +157,13 @@ const Login = ({ title }) => {
               </div>
 
               <div className="form-button">
-                <button type="submit" className="btn">
-                  Login
-                </button>
+                {toogle ? (
+                  <Spiner />
+                ) : (
+                  <button type="submit" className="btn">
+                    Login
+                  </button>
+                )}
               </div>
               <Link to="/registrar" className="link-register">
                 <p>Fazer o cadastro</p>
@@ -190,7 +185,16 @@ const Login = ({ title }) => {
           <div className="content-form">
             <h1>{title}</h1>
             <form onSubmit={handleCreate}>
-              <div className="form-email">
+              <div className="form-username-register">
+                <label>Username</label>
+                <input
+                  type="text"
+                  placeholder="Digite seu username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </div>
+              <div className="form-email-register">
                 <label>Email</label>
                 <input
                   type="email"
@@ -199,7 +203,7 @@ const Login = ({ title }) => {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
-              <div className="form-password">
+              <div className="form-password-register">
                 <label>Senha</label>
                 <input
                   type="password"
@@ -210,9 +214,13 @@ const Login = ({ title }) => {
               </div>
 
               <div className="form-button">
-                <button type="submit" className="btn">
-                  Register
-                </button>
+                {toogle ? (
+                  <Spiner />
+                ) : (
+                  <button type="submit" className="btn">
+                    Registrar
+                  </button>
+                )}
               </div>
               <Link to="/login" className="link-register">
                 <p>Entrar </p>

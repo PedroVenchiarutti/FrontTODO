@@ -1,24 +1,58 @@
-import React from "react";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "../Page/HomePage";
 import Login from "../Page/Login";
 
 const ChangeRoutes = () => {
-  // const PrivateUser = ({ children }) => {
-  //   const user = localStorage.getItem("user");
+  const privateUser = JSON.parse(localStorage.getItem("user"));
 
-  //   console.log(user);
+  const PrivateRoutes = ({ children }) => {
+    return privateUser ? children : <Navigate to="/registrar" />;
+  };
 
-  //   return children;
-  // };
+  const PrivateLogin = ({ children }) => {
+    if (privateUser) {
+      return <Navigate to="/home" />;
+    } else {
+      return children;
+    }
+  };
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<Login title="Login" />} />
-        <Route path="/registrar" element={<Login title="Registrar" />} />
-        <Route path="*" element={<HomePage />} />
+        <Route
+          path="/"
+          element={
+            <PrivateRoutes>
+              <HomePage />
+            </PrivateRoutes>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <PrivateLogin>
+              <Login title="Login" />
+            </PrivateLogin>
+          }
+        />
+        <Route
+          path="/registrar"
+          element={
+            <PrivateLogin>
+              <Login title="Registrar" />
+            </PrivateLogin>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <PrivateRoutes>
+              <HomePage />
+            </PrivateRoutes>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
