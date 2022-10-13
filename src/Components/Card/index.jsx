@@ -29,8 +29,6 @@ const Card = ({ title }) => {
     });
   };
 
-  console.log("teset");
-
   return (
     <div className="card">
       <div className="card__header">

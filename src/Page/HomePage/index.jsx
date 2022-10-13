@@ -7,7 +7,9 @@ const HomePage = () => {
   const [data, setData] = useState([]);
   const [toogle, setToogle] = useState(false);
   const [toogleNew, setToogleNew] = useState(false);
+  const [indexx, setIndexx] = useState(0);
   const id = JSON.parse(localStorage.getItem("user"))?.user_id;
+
   const [actual, setActual] = useState({
     id: "",
     description: "",
@@ -24,9 +26,10 @@ const HomePage = () => {
     setToogleNew(!toogle);
   };
 
-  const modal = (item) => {
+  const modal = (item, index) => {
     setToogle(!toogle);
     setActual(item);
+    setIndexx(index);
   };
 
   const edit = (item) => {
@@ -85,7 +88,7 @@ const HomePage = () => {
                 </tr>
                 <tr className="tr-map">
                   <td>
-                    <input type="text" value={actual.task_id} />
+                    <input type="text" readOnly value={indexx} />
                   </td>
                   <td>
                     <input
@@ -101,6 +104,7 @@ const HomePage = () => {
                       onChange={(e) =>
                         setActual({ ...actual, status: e.target.value })
                       }
+                      value={actual.status}
                     >
                       <option value="0">Selecione</option>
                       <option value="pendente">Pendente</option>
@@ -115,6 +119,12 @@ const HomePage = () => {
                 </button>
                 <button className="btn" onClick={() => remove(actual)}>
                   Excluir
+                </button>
+                <button
+                  className="btn"
+                  onClick={(e) => window.location.reload()}
+                >
+                  Voltar
                 </button>
               </div>
             </table>
@@ -132,7 +142,7 @@ const HomePage = () => {
         <div>
           <p>
             Usuario:
-            <span>{JSON.parse(localStorage.getItem("user")).username}</span>
+            <span>{JSON.parse(localStorage.getItem("user"))?.username}</span>
           </p>
           <p>
             <span onClick={() => deslogar()}>Sair</span>
@@ -152,7 +162,7 @@ const HomePage = () => {
                   className={
                     item.status === "concluido" ? "tr-map concluido" : "tr-map"
                   }
-                  onClick={() => modal(item)}
+                  onClick={() => modal(item, index)}
                 >
                   <td>{index++ + 1}</td>
                   <td>{item.description}</td>
