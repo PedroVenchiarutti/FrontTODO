@@ -126,7 +126,7 @@ const HomePage = () => {
             <span>{JSON.parse(localStorage.getItem("user")).username}</span>
           </p>
           <p>
-            <span onClick={deslogar}>Sair</span>
+            <span onClick={() => deslogar()}>Sair</span>
           </p>
         </div>
         <div className="table-homepage">
@@ -152,7 +152,7 @@ const HomePage = () => {
               ))}
             </tbody>
             <div className="button-tag">
-              <button className="btn" onClick={modalAdd}>
+              <button className="btn" onClick={() => modalAdd()}>
                 Adicionar
               </button>
             </div>

@@ -29,6 +29,8 @@ const Card = ({ title }) => {
     });
   };
 
+  console.log("teset");
+
   return (
     <div className="card">
       <div className="card__header">
@@ -47,18 +49,17 @@ const Card = ({ title }) => {
           </div>
           <div className="status">
             <label>Status: </label>
-            <input
-              type="text"
-              placeholder="Digite seu status: pedente, concluido"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-            />
+            <select onChange={(e) => setStatus(e.target.value)}>
+              <option value="0">Selecione</option>
+              <option value="pendente">Pendente</option>
+              <option value="concluido">Concluido</option>
+            </select>
           </div>
           <div className="button-tag">
-            <button className="btn" onClick={add}>
+            <button className="btn" onClick={() => add()}>
               Adicionar
             </button>
-            <button className="btn" onClick={close}>
+            <button className="btn" onClick={() => close()}>
               Voltar
             </button>
           </div>

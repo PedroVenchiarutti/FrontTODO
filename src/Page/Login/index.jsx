@@ -25,19 +25,19 @@ const Login = ({ title }) => {
     setToogle(true);
 
     if (email === "") {
-      setError({
-        message: "Preencha o campo email",
-        status: true,
-        class: "error",
+      Swal.fire({
+        icon: "error",
+        title: "Erro",
+        text: "Preencha o campo email",
       });
-      return;
+      return setToogle(false);
     } else if (password === "") {
-      setError({
-        message: "Preencha o campo senha",
-        status: true,
-        class: "error",
+      Swal.fire({
+        icon: "error",
+        title: "Erro",
+        text: "Preencha o campo senha",
       });
-      return;
+      return setToogle(false);
     }
 
     api
@@ -70,11 +70,13 @@ const Login = ({ title }) => {
         }
       })
       .catch((error) => {
+        console.log(error.response.data.message);
         Swal.fire({
           icon: "error",
           title: "Erro",
-          text: error.message,
+          text: error.response.data.message,
         });
+        setToogle(false);
       });
 
     setEmail("");
