@@ -18,7 +18,7 @@ const HomePage = () => {
     api.get(`/consultar/${id}`).then((response) => {
       setData(response.data[0].tasks_tasks_user_idTousers);
     });
-  }, [data]);
+  }, []);
 
   const modalAdd = () => {
     setToogleNew(!toogle);
@@ -40,6 +40,7 @@ const HomePage = () => {
         console.log(response);
         if (response.status === 200) {
           setToogle(!toogle);
+          window.location.reload();
         }
       })
       .catch((error) => {
@@ -48,14 +49,20 @@ const HomePage = () => {
   };
 
   const remove = (item) => {
-    api
-      .delete(`/deletar/${item.task_id}`)
-      .then((response) => {
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    window.confirm("Deseja realmente excluir essa tarefa?");
+
+    if (item.status === "concluido") {
+      api
+        .delete(`/deletar/${item.task_id}`)
+        .then((response) => {
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      alert("Tarefa não concluida");
+    }
   };
 
   const deslogar = () => {
@@ -90,13 +97,15 @@ const HomePage = () => {
                     />
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      value={actual.status}
+                    <select
                       onChange={(e) =>
                         setActual({ ...actual, status: e.target.value })
                       }
-                    />
+                    >
+                      <option value="0">Selecione</option>
+                      <option value="pendente">Pendente</option>
+                      <option value="concluido">Concluido</option>
+                    </select>
                   </td>
                 </tr>
               </tbody>
@@ -137,9 +146,9 @@ const HomePage = () => {
                 <th>Descrição</th>
                 <th>Status</th>
               </tr>
-              {data?.map((item, key) => (
+              {data?.map((item, index) => (
                 <tr
-                  key={item.id}
+                  key={index}
                   className={
                     item.status === "concluido" ? "tr-map concluido" : "tr-map"
                   }
@@ -147,16 +156,16 @@ const HomePage = () => {
                 >
                   <td>{item.task_id}</td>
                   <td>{item.description}</td>
-                  <td>{item.status}</td>
+                  <td>{item.status[0].toUpperCase() + item.status.slice(1)}</td>
                 </tr>
               ))}
             </tbody>
-            <div className="button-tag">
-              <button className="btn" onClick={() => modalAdd()}>
-                Adicionar
-              </button>
-            </div>
           </table>
+          <div className="button-tag">
+            <button className="btn" onClick={() => modalAdd()}>
+              Adicionar
+            </button>
+          </div>
         </div>
       </div>
     </div>

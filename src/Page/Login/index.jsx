@@ -18,6 +18,15 @@ const Login = ({ title }) => {
   });
   const [user, setUser] = useState([]);
 
+  const errorGenerater = (message) => {
+    setToogle(false);
+    return Swal.fire({
+      icon: "error",
+      title: "Erro",
+      text: message,
+    });
+  };
+
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -25,19 +34,9 @@ const Login = ({ title }) => {
     setToogle(true);
 
     if (email === "") {
-      Swal.fire({
-        icon: "error",
-        title: "Erro",
-        text: "Preencha o campo email",
-      });
-      return setToogle(false);
+      errorGenerater("Preencha o campo de email");
     } else if (password === "") {
-      Swal.fire({
-        icon: "error",
-        title: "Erro",
-        text: "Preencha o campo senha",
-      });
-      return setToogle(false);
+      errorGenerater("Preencha o campo senha");
     }
 
     api
@@ -71,12 +70,7 @@ const Login = ({ title }) => {
       })
       .catch((error) => {
         console.log(error.response.data.message);
-        Swal.fire({
-          icon: "error",
-          title: "Erro",
-          text: error.response.data.message,
-        });
-        setToogle(false);
+        errorGenerater(error.response.data.message);
       });
 
     setEmail("");
@@ -87,19 +81,11 @@ const Login = ({ title }) => {
     e.preventDefault();
     setToogle(true);
     if (email === "") {
-      setError({
-        message: "Preencha o campo email",
-        status: true,
-        class: "error",
-      });
-      return;
+      errorGenerater("Preencha o campo de email");
     } else if (password === "") {
-      setError({
-        message: "Preencha o campo senha",
-        status: true,
-        class: "error",
-      });
-      return;
+      errorGenerater("Preencha o campo senha");
+    } else if (username === "") {
+      errorGenerater("Preencha o campo nome");
     }
 
     api

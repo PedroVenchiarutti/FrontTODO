@@ -47,6 +47,7 @@
     .table-homepage {
       width: 100%;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
 
@@ -93,6 +94,16 @@
           &:hover {
             background-color: rgba(51, 51, 51, 0.5);
             cursor: pointer;
+          }
+
+          select {
+            width: 100px;
+            height: 30px;
+
+            border: none;
+            outline: none;
+            border-radius: 5px;
+            padding: 5px;
           }
 
           input {
