@@ -154,7 +154,7 @@ const HomePage = () => {
                   }
                   onClick={() => modal(item)}
                 >
-                  <td>{item.task_id}</td>
+                  <td>{index++ + 1}</td>
                   <td>{item.description}</td>
                   <td>{item.status[0].toUpperCase() + item.status.slice(1)}</td>
                 </tr>
